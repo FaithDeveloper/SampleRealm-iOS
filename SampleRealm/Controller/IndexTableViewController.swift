@@ -33,6 +33,8 @@ class IndexTableViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -73,11 +75,11 @@ class IndexTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! TableViewCell
         
-        let db = personData?[indexPath.row]
-        
-        cell.userName.text = db?.userName
-        cell.userAge.text = String(describing: db?.userAge)
-        cell.userEmail.text = db?.userEmail
+        if let db = personData?[indexPath.row]{
+            cell.userName.text = db.userName
+            cell.userAge.text = String(describing: db.userAge)
+            cell.userEmail.text = db.userEmail
+        }
         
         return cell
     }

@@ -82,13 +82,15 @@ class InputViewController: UIViewController{
         }
         
         //Age
-        if let age = txtUserAge.text{
-            if age == ""{
-                db.userAge = 0
+        var age = 0
+        if let getAge = txtUserAge.text{
+            if getAge == ""{
+                age = 0
             }else{
-                db.userAge = Int(age)!
+                age = Int(getAge)!
             }
         }
+        db.userAge = age
         
         //Email
         if let email = txtUserEmail.text{
