@@ -49,6 +49,8 @@ class InputViewController: UIViewController{
     func saveData(){
         if personData == nil{
            addPersionData()
+        }else{
+            updatePersionData()
         }
         
         navigationController?.popViewController(animated: true)
@@ -57,7 +59,7 @@ class InputViewController: UIViewController{
     //MARK: Person Data 을 Realm에 추가합니다.
     func addPersionData(){
         personData = PersonData()
-        inputDataToPersionData(db: personData!)
+        personData = inputDataToPersionData(db: personData!)
         //input Realm
         try? realm?.write {
             realm?.add((personData)!)
@@ -65,39 +67,34 @@ class InputViewController: UIViewController{
     }
     
     //MARK: Person Data Update
-    // Realm의 데이터 수정, 삭제가 있을 경우 1) Realm.Write()  2) Realm.add 형태로 진행합니다.
+    // Realm의 데이터 수정, 삭제가 있을 경우 1) Realm.Write()  2) Realm 에서 가져온 데이터의 값을 변경합니다.
     func updatePersionData(){
-        let db = realm?.objects(PersonData.self).filter("userName = %@", personData?.userName)
-
-        if let data =  db?.first {
-            try? realm?.write {
-                inputDataToPersionData(db: data)
-                realm?.add((personData)!, update: true)
-            }
+        try? realm?.write {
+            personData = inputDataToPersionData(db: personData!)
         }
     }
     
     //MARK: Person Data에 Data을 저장하고, Realm에 저장합니다.
-    func inputDataToPersionData(db : PersonData){
+    func inputDataToPersionData(db : PersonData) -> PersonData{
         //Name
         if let name = txtUserName.text {
-            personData?.userName = name
+            db.userName = name
         }
         
         //Age
         if let age = txtUserAge.text{
             if age == ""{
-                personData?.userAge = 0
+                db.userAge = 0
             }else{
-                personData?.userAge = Int(age)!
+                db.userAge = Int(age)!
             }
         }
         
         //Email
         if let email = txtUserEmail.text{
-            personData?.userEmail = email
+            db.userEmail = email
         }
-        
+        return db
     }
     
     //MARK: LoadData
